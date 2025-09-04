@@ -1,4 +1,10 @@
+import { useEffect } from "react";
+
 export default function SchoolCatalog() {
+  useEffect(() => {
+    fetch("/api/courses.json").then((response) => response.json());
+  }, []);
+
   return (
     <div className="school-catalog">
       <h1>School Catalog</h1>
