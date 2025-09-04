@@ -29,11 +29,11 @@ export default function SchoolCatalog() {
         <tbody>
           {courses.map((course) => (
             <tr key={course}>
-              <td key={course.trimester}>{course.trimester}</td>
-              <td key={course.courseNumber}>{course.courseNumber}</td>
-              <td>Beginning Procedural Programming</td>
-              <td>2</td>
-              <td>30</td>
+              <td>{course.trimester}</td>
+              <td>{course.courseNumber}</td>
+              <td>{course.courseName}</td>
+              <td>{course.semesterCredits}</td>
+              <td>{course.totalClockHours}</td>
               <td>
                 <button>Enroll</button>
               </td>
