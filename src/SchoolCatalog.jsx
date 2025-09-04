@@ -1,8 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function SchoolCatalog() {
+  // courses will hold the data, setCourses will be used to update after API call
+  const [courses, setCourses] = useState([]);
+
   useEffect(() => {
-    fetch("/api/courses.json").then((response) => response.json());
+    fetch("/api/courses.json")
+      .then((response) => response.json())
+      .then((data) => setCourses(data));
+    // use [] as second arg tells it to run after component renders
   }, []);
 
   return (
@@ -21,36 +27,18 @@ export default function SchoolCatalog() {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>PP1000</td>
-            <td>Beginning Procedural Programming</td>
-            <td>2</td>
-            <td>30</td>
-            <td>
-              <button>Enroll</button>
-            </td>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>PP1100</td>
-            <td>Basic Procedural Programming</td>
-            <td>4</td>
-            <td>50</td>
-            <td>
-              <button>Enroll</button>
-            </td>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>OS1000</td>
-            <td>Fundamentals of Open Source Operating Systems</td>
-            <td>2.5</td>
-            <td>37.5</td>
-            <td>
-              <button>Enroll</button>
-            </td>
-          </tr>
+          {courses.map((course) => (
+            <tr key={course}>
+              <td key={course.trimester}>{course.trimester}</td>
+              <td key={course.courseNumber}>{course.courseNumber}</td>
+              <td>Beginning Procedural Programming</td>
+              <td>2</td>
+              <td>30</td>
+              <td>
+                <button>Enroll</button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
       <div className="pagination">
