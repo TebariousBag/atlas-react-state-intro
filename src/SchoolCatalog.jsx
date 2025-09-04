@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 export default function SchoolCatalog() {
   // courses will hold the data, setCourses will be used to update after API call
   const [courses, setCourses] = useState([]);
+  // variable for state of search bar filter
+  const [filter, setFilter] = useState("");
 
   useEffect(() => {
     fetch("/api/courses.json")
@@ -15,6 +17,7 @@ export default function SchoolCatalog() {
     <div className="school-catalog">
       <h1>School Catalog</h1>
       <input type="text" placeholder="Search" />
+
       <table>
         <thead>
           <tr>
