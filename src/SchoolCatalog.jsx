@@ -13,10 +13,25 @@ export default function SchoolCatalog() {
     // use [] as second arg tells it to run after component renders
   }, []);
 
+  // filter courses from json, case insensitive
+  // filtering by courseName or courseNumber
+  const filteredCourses = courses.filter((course) => {
+    const searchTerm = filter.toLowerCase();
+    const courseNumber = course.courseNumber.toLowerCase();
+    const courseName = course.courseName.toLowerCase();
+
+    return courseNumber.includes(searchTerm) || courseName.includes(searchTerm);
+  });
+
   return (
     <div className="school-catalog">
       <h1>School Catalog</h1>
-      <input type="text" placeholder="Search" />
+      <input
+        type="text"
+        placeholder="Search"
+        value={filter}
+        onChange={(e) => setFilter(e.target.value)}
+      />
 
       <table>
         <thead>
@@ -30,7 +45,7 @@ export default function SchoolCatalog() {
           </tr>
         </thead>
         <tbody>
-          {courses.map((course) => (
+          {filteredCourses.map((course) => (
             <tr key={course}>
               <td>{course.trimester}</td>
               <td>{course.courseNumber}</td>
