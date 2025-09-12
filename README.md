@@ -1,3 +1,6 @@
+Deployed on Netlify
+atlas-react-state-tdavis.netlify.app
+
 # React State Introduction
 
 ## Getting Started
