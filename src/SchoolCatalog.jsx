@@ -5,6 +5,39 @@ export default function SchoolCatalog() {
   const [courses, setCourses] = useState([]);
   // variable for state of search bar filter
   const [filter, setFilter] = useState("");
+  // state for sorting
+  const [sortConfig, setSortConfig] = useState({
+    column: "",
+    direction: "asc",
+  });
+
+  const handleSort = (column) => {
+    setSortConfig((prev) => ({
+      column,
+      direction:
+        prev.column === column && prev.direction === "asc" ? "desc" : "asc",
+    }));
+  };
+
+  // Filter and sort courses
+  const processedCourses = courses
+    .filter((course) => {
+      const searchTerm = filter.toLowerCase();
+      return (
+        course.courseNumber.toLowerCase().includes(searchTerm) ||
+        course.courseName.toLowerCase().includes(searchTerm)
+      );
+    })
+    .sort((a, b) => {
+      if (!sortConfig.column) return 0;
+
+      const aValue = a[sortConfig.column].toString().toLowerCase();
+      const bValue = b[sortConfig.column].toString().toLowerCase();
+
+      if (aValue < bValue) return sortConfig.direction === "asc" ? -1 : 1;
+      if (aValue > bValue) return sortConfig.direction === "asc" ? 1 : -1;
+      return 0;
+    });
 
   useEffect(() => {
     fetch("/api/courses.json")
@@ -36,16 +69,51 @@ export default function SchoolCatalog() {
       <table>
         <thead>
           <tr>
-            <th>Trimester</th>
-            <th>Course Number</th>
-            <th>Courses Name</th>
-            <th>Semester Credits</th>
-            <th>Total Clock Hours</th>
+            <th
+              onClick={() => handleSort("trimester")}
+              style={{ cursor: "pointer" }}
+            >
+              Trimester{" "}
+              {sortConfig.column === "trimester" &&
+                (sortConfig.direction === "asc" ? "↑" : "↓")}
+            </th>
+            <th
+              onClick={() => handleSort("courseNumber")}
+              style={{ cursor: "pointer" }}
+            >
+              Course Number{" "}
+              {sortConfig.column === "courseNumber" &&
+                (sortConfig.direction === "asc" ? "↑" : "↓")}
+            </th>
+            <th
+              onClick={() => handleSort("courseName")}
+              style={{ cursor: "pointer" }}
+            >
+              Courses Name{" "}
+              {sortConfig.column === "courseName" &&
+                (sortConfig.direction === "asc" ? "↑" : "↓")}
+            </th>
+            <th
+              onClick={() => handleSort("semesterCredits")}
+              style={{ cursor: "pointer" }}
+            >
+              Semester Credits{" "}
+              {sortConfig.column === "semesterCredits" &&
+                (sortConfig.direction === "asc" ? "↑" : "↓")}
+            </th>
+            <th
+              onClick={() => handleSort("totalClockHours")}
+              style={{ cursor: "pointer" }}
+            >
+              Total Clock Hours{" "}
+              {sortConfig.column === "totalClockHours" &&
+                (sortConfig.direction === "asc" ? "↑" : "↓")}
+            </th>
             <th>Enroll</th>
           </tr>
         </thead>
         <tbody>
-          {filteredCourses.map((course) => (
+          {processedCourses.map((course) => (
             <tr key={course}>
               <td>{course.trimester}</td>
               <td>{course.courseNumber}</td>
