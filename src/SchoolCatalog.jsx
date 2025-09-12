@@ -10,7 +10,26 @@ export default function SchoolCatalog() {
     column: "",
     direction: "asc",
   });
+  // state for pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
+  // handling fof pagination
+  const handlePrevious = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNext = () => {
+    const totalPages = Math.ceil(processedCourses.length / itemsPerPage);
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
+
+  // reset pagination when filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter]);
+
+  // sorting in ascending and desceending order
   const handleSort = (column) => {
     setSortConfig((prev) => ({
       column,
@@ -55,6 +74,11 @@ export default function SchoolCatalog() {
 
     return courseNumber.includes(searchTerm) || courseName.includes(searchTerm);
   });
+  // pagination to switch between pages
+  const totalPages = Math.ceil(processedCourses.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedCourses = processedCourses.slice(startIndex, endIndex);
 
   return (
     <div className="school-catalog">
@@ -113,7 +137,7 @@ export default function SchoolCatalog() {
           </tr>
         </thead>
         <tbody>
-          {processedCourses.map((course) => (
+          {paginatedCourses.map((course) => (
             <tr key={course}>
               <td>{course.trimester}</td>
               <td>{course.courseNumber}</td>
@@ -128,8 +152,18 @@ export default function SchoolCatalog() {
         </tbody>
       </table>
       <div className="pagination">
-        <button>Previous</button>
-        <button>Next</button>
+        <button onClick={handlePrevious} disabled={currentPage === 1}>
+          Previous
+        </button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={handleNext}
+          disabled={currentPage === totalPages || totalPages === 0}
+        >
+          Next
+        </button>
       </div>
     </div>
   );
